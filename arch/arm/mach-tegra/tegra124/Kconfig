@@ -17,6 +17,14 @@ config TARGET_JETSON_TK1
 	select CPU_V7_HAS_NONSEC
 	select CPU_V7_HAS_VIRT
 
+config TARGET_MOCHA
+	bool "NVIDIA Tegra124 MOCHA Tablet"
+	select ARCH_SUPPORT_PSCI
+	select BOARD_LATE_INIT
+	select CPU_V7_HAS_NONSEC
+	select CPU_V7_HAS_VIRT
+
+
 config TARGET_CEI_TK1_SOM
 	bool "Colorado Engineering Inc Tegra124 TK1-som board"
 	select BOARD_LATE_INIT
@@ -52,6 +60,7 @@ source "board/cei/cei-tk1-som/Kconfig"
 source "board/nvidia/jetson-tk1/Kconfig"
 source "board/nvidia/nyan-big/Kconfig"
 source "board/nvidia/venice2/Kconfig"
+source "board/nvidia/mocha/Kconfig"
 source "board/toradex/apalis-tk1/Kconfig"
 
 endif
