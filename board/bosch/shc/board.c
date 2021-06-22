@@ -12,10 +12,13 @@
  */
 
 #include <common.h>
+#include <bootstage.h>
+#include <cpu_func.h>
 #include <env.h>
 #include <errno.h>
 #include <init.h>
 #include <irq_func.h>
+#include <net.h>
 #include <spl.h>
 #include <asm/arch/cpu.h>
 #include <asm/arch/hardware.h>
@@ -26,12 +29,14 @@
 #include <asm/arch/mmc_host_def.h>
 #include <asm/arch/sys_proto.h>
 #include <asm/arch/mem.h>
+#include <asm/global_data.h>
 #include <asm/io.h>
 #include <asm/emif.h>
 #include <asm/gpio.h>
 #include <i2c.h>
 #include <miiphy.h>
 #include <cpsw.h>
+#include <linux/delay.h>
 #include <power/tps65217.h>
 #include <env_internal.h>
 #include <watchdog.h>
@@ -40,7 +45,7 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
-static struct shc_eeprom __attribute__((section(".data"))) header;
+static struct shc_eeprom __section(".data") header;
 static int shc_eeprom_valid;
 
 /*
@@ -468,7 +473,7 @@ int board_late_init(void)
 
 #if defined(CONFIG_USB_ETHER) && \
 	(!defined(CONFIG_SPL_BUILD) || defined(CONFIG_SPL_USB_ETHER))
-int board_eth_init(bd_t *bis)
+int board_eth_init(struct bd_info *bis)
 {
 	return usb_eth_initialize(bis);
 }
@@ -481,7 +486,7 @@ static void bosch_check_reset_pin(void)
 		printf("Resetting ...\n");
 		writel(RESET_MASK, GPIO1_BASE + OMAP_GPIO_IRQSTATUS_SET_0);
 		disable_interrupts();
-		reset_cpu(0);
+		reset_cpu();
 		/*NOTREACHED*/
 	}
 }

@@ -37,14 +37,6 @@
 #define MV88E1116_RGMII_TXTM_CTRL	(1 << 4)
 #define MV88E1116_RGMII_RXTM_CTRL	(1 << 5)
 
-/*
- * Commands configuration
- */
-
-/*
- * mv-common.h should be defined after CMD configs since it used them
- * to enable certain macros
- */
 #include "mv-common.h"
 
 /*
@@ -87,14 +79,6 @@
  */
 #define CONFIG_JFFS2_NAND
 #define CONFIG_JFFS2_LZO
-
-/*
- * SATA
- */
-#ifdef CONFIG_MVSATA_IDE
-#define CONFIG_SYS_ATA_IDE0_OFFSET      MV_SATA_PORT0_OFFSET
-#define CONFIG_SYS_ATA_IDE1_OFFSET      MV_SATA_PORT1_OFFSET
-#endif
 
 /*
  * EFI partition

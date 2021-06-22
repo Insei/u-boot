@@ -17,14 +17,6 @@
 #define CONFIG_SHEEVA_88SV131	1	/* CPU Core subversion */
 #define CONFIG_MACH_TYPE	MACH_TYPE_DREAMPLUG
 
-/*
- * Commands configuration
- */
-
-/*
- * mv-plug-common.h should be defined after CMD configs since it used them
- * to enable certain macros
- */
 #include "mv-plug-common.h"
 
 /*
@@ -59,12 +51,5 @@
 #define CONFIG_MVGBE_PORTS	{1, 1}	/* enable both ports */
 #define CONFIG_PHY_BASE_ADR	0
 #endif /* CONFIG_CMD_NET */
-
-/*
- * SATA Driver configuration
- */
-#ifdef CONFIG_MVSATA_IDE
-#define CONFIG_SYS_ATA_IDE0_OFFSET	MV_SATA_PORT0_OFFSET
-#endif /*CONFIG_MVSATA_IDE*/
 
 #endif /* _CONFIG_DREAMPLUG_H */

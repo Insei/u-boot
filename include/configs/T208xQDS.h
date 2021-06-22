@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * Copyright 2011-2013 Freescale Semiconductor, Inc.
+ * Copyright 2020-2021 NXP
  */
 
 /*
@@ -10,27 +11,22 @@
 #ifndef __T208xQDS_H
 #define __T208xQDS_H
 
+#include <linux/stringify.h>
+
 #define CONFIG_ICS307_REFCLK_HZ 25000000  /* ICS307 ref clk freq */
 #if defined(CONFIG_ARCH_T2080)
 #define CONFIG_FSL_SATA_V2
 #define CONFIG_SYS_SRIO		/* Enable Serial RapidIO Support */
 #define CONFIG_SRIO1		/* SRIO port 1 */
 #define CONFIG_SRIO2		/* SRIO port 2 */
-#elif defined(CONFIG_ARCH_T2081)
 #endif
 
 /* High Level Configuration Options */
 #define CONFIG_SYS_BOOK3E_HV	/* Category E.HV supported */
 #define CONFIG_ENABLE_36BIT_PHYS
 
-#ifdef CONFIG_PHYS_64BIT
-#define CONFIG_ADDR_MAP 1
-#define CONFIG_SYS_NUM_ADDR_MAP 64 /* number of TLB1 entries */
-#endif
-
 #define CONFIG_SYS_FSL_CPC	/* Corenet Platform Cache */
 #define CONFIG_SYS_NUM_CPC	CONFIG_SYS_NUM_DDR_CTLRS
-#define CONFIG_ENV_OVERWRITE
 
 #ifdef CONFIG_RAMBOOT_PBL
 #define CONFIG_SYS_FSL_PBL_PBI board/freescale/t208xqds/t208x_pbi.cfg
@@ -53,8 +49,6 @@
 #define CONFIG_SYS_NAND_U_BOOT_OFFS	(256 << 10)
 #if defined(CONFIG_ARCH_T2080)
 #define CONFIG_SYS_FSL_PBL_RCW board/freescale/t208xqds/t2080_nand_rcw.cfg
-#elif defined(CONFIG_ARCH_T2081)
-#define CONFIG_SYS_FSL_PBL_RCW board/freescale/t208xqds/t2081_nand_rcw.cfg
 #endif
 #endif
 
@@ -70,8 +64,6 @@
 #endif
 #if defined(CONFIG_ARCH_T2080)
 #define CONFIG_SYS_FSL_PBL_RCW board/freescale/t208xqds/t2080_spi_rcw.cfg
-#elif defined(CONFIG_ARCH_T2081)
-#define CONFIG_SYS_FSL_PBL_RCW board/freescale/t208xqds/t2081_spi_rcw.cfg
 #endif
 #endif
 
@@ -86,8 +78,6 @@
 #endif
 #if defined(CONFIG_ARCH_T2080)
 #define CONFIG_SYS_FSL_PBL_RCW board/freescale/t208xqds/t2080_sd_rcw.cfg
-#elif defined(CONFIG_ARCH_T2081)
-#define CONFIG_SYS_FSL_PBL_RCW board/freescale/t208xqds/t2081_sd_rcw.cfg
 #endif
 #endif
 
@@ -115,11 +105,6 @@
 #ifdef CONFIG_DDR_ECC
 #define CONFIG_ECC_INIT_VIA_DDRCONTROLLER
 #define CONFIG_MEM_INIT_VALUE		0xdeadbeef
-#endif
-
-#if defined(CONFIG_SPIFLASH)
-#elif defined(CONFIG_SDCARD)
-#define CONFIG_SYS_MMC_ENV_DEV	0
 #endif
 
 #ifndef __ASSEMBLY__
@@ -385,8 +370,8 @@ unsigned long get_board_ddr_clk(void);
 /*
  * I2C
  */
+#if !CONFIG_IS_ENABLED(DM_I2C)
 #define CONFIG_SYS_I2C
-#define CONFIG_SYS_I2C_FSL
 #define CONFIG_SYS_FSL_I2C_SLAVE   0x7F
 #define CONFIG_SYS_FSL_I2C2_SLAVE  0x7F
 #define CONFIG_SYS_FSL_I2C3_SLAVE  0x7F
@@ -399,6 +384,10 @@ unsigned long get_board_ddr_clk(void);
 #define CONFIG_SYS_FSL_I2C2_SPEED  100000
 #define CONFIG_SYS_FSL_I2C3_SPEED  100000
 #define CONFIG_SYS_FSL_I2C4_SPEED  100000
+#endif
+
+#define CONFIG_SYS_I2C_FSL
+
 #define I2C_MUX_PCA_ADDR_PRI	0x77 /* I2C bus multiplexer,primary */
 #define I2C_MUX_PCA_ADDR_SEC1	0x75 /* I2C bus multiplexer,secondary 1 */
 #define I2C_MUX_PCA_ADDR_SEC2	0x76 /* I2C bus multiplexer,secondary 2 */
@@ -587,9 +576,6 @@ unsigned long get_board_ddr_clk(void);
 #endif /* CONFIG_NOBQFMAN */
 
 #ifdef CONFIG_SYS_DPAA_FMAN
-#define CONFIG_PHY_VITESSE
-#define CONFIG_PHY_REALTEK
-#define CONFIG_PHY_TERANETICS
 #define RGMII_PHY1_ADDR	0x1
 #define RGMII_PHY2_ADDR	0x2
 #define FM1_10GEC1_PHY_ADDR	  0x3
@@ -630,11 +616,8 @@ unsigned long get_board_ddr_clk(void);
  * SDHC
  */
 #ifdef CONFIG_MMC
-#define CONFIG_FSL_ESDHC_USE_PERIPHERAL_CLK
 #define CONFIG_SYS_FSL_ESDHC_ADDR	CONFIG_SYS_MPC85xx_ESDHC_ADDR
 #define CONFIG_SYS_FSL_ESDHC_BROKEN_TIMEOUT
-#define CONFIG_SYS_FSL_MMC_HAS_CAPBLT_VS33
-#define CONFIG_FSL_ESDHC_ADAPTER_IDENT
 #endif
 
 /*
